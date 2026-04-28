@@ -3,7 +3,7 @@ ProtectVersion=%A
 
 [Source]
 Type=url-file
-Path=https://lapwing.org/misc/webthings/gateway/
+Path=https://webthings.io/downloads/gateway/
 MatchPattern=webthings-gateway_@v_%a.usr-%a-verity.@u.raw.zst
 
 [Target]

@@ -15,6 +15,7 @@ import LinuxDebianPlatform from './platforms/linux-debian';
 import LinuxRaspbianPlatform from './platforms/linux-raspbian';
 import LinuxUbuntuPlatform from './platforms/linux-ubuntu';
 import LinuxUbuntuCorePlatform from './platforms/linux-ubuntu-core';
+import LinuxWebThingsOSPlatform from '.platforms/linux-webthings';
 import {
   LanMode,
   NetworkAddresses,
@@ -38,6 +39,7 @@ import {
  *                        * linux-debian
  *                        * linux-raspbian
  *                        * linux-ubuntu
+ *                        * linux-webthings
  *                        * linux-unknown
  */
 export function getOS(): string {
@@ -46,6 +48,75 @@ export function getOS(): string {
     return platform;
   }
 
+  let os_release_id = null;
+
+  // Try /etc/os-release first, for both IMAGE_ID and ID.
+  // If we find IMAGE_ID, return the value as this is likely WebThingsOS,
+  // otherwise it's another Linux distro.
+  try {
+    const osReleaseLines = fs
+    .readFileSync('/etc/os-release', {
+      encoding: 'utf8',
+    })
+    .split('\n');
+
+    // Iterate through the file
+    for (let line of osReleaseLines) {
+      // Trim whitespace
+      line = line.trim();
+
+      // Try IMAGE_ID first and return it if we find it,
+      // else look at ID
+      if (line.startsWith('IMAGE_ID=')) {
+        // Get the value of the IMAGE_ID
+        let id = line.substring(8, line.length);
+        // Remove any quotation marks
+        id = id.replace(/"/g, '');
+        switch (id) {
+          case 'webthings':
+          case 'webthings-gateway':
+            return 'linux-webthings';
+          default:
+            console.log('Unknown Linux image');
+            break;
+        }
+      }
+
+      // Find the line containing ID,
+      // and just record it if we find it, as ID is usually before IMAGE_ID
+      // in /etc/os-release, and we're want IMAGE_ID more than ID.
+      if (line.startsWith('ID=')) {
+        // Get the value of the ID
+        let id = line.substring(3, line.length);
+        // Remove any quotation marks
+        id = id.replace(/"/g, '');
+        switch (id) {
+          case 'ubuntu':
+            os_release_id = 'linux-ubuntu';
+          case 'ubuntu-core':
+            os_release_id = 'linux-ubuntu-core';
+          case 'debian':
+            os_release_id = 'linux-debian';
+          case 'arch':
+            os_release_id = 'linux-arch';
+          case 'raspbian':
+            os_release_id = 'linux-raspbian';
+          default:
+            console.log('Unknown Linux distribution');
+            break;
+        }
+      }
+
+    }
+  } catch (error) {
+    console.log(`Error trying to read os-release file: ${error}`);
+  }
+
+  if (os_release_id !== null) {
+    return os_release_id;
+  }
+
+  // Fallback to calling `lsb_release`
   const proc = child_process.spawnSync('lsb_release', ['-i', '-s']);
   if (proc.status === 0) {
     const lsb_release = proc.stdout.toString().trim();
@@ -202,6 +273,9 @@ switch (getOS()) {
     break;
   case 'linux-ubuntu-core':
     platform = LinuxUbuntuCorePlatform;
+    break;
+  case 'linux-webthings':
+    platform = LinuxWebThingsOSPlatform;
     break;
   default:
     platform = null;

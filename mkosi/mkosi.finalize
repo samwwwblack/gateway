@@ -12,8 +12,8 @@ cp --archive --no-target-directory --update=none "$BUILDROOT/etc" "$BUILDROOT/us
 # we don't want to be shipping 'defaults' that could be accidentally copied across and used.
 if [[ -d "$BUILDROOT/usr/share/factory/etc/ssh" ]]; then
     pushd "$BUILDROOT/usr/share/factory/etc/ssh"
-    rm *_key
-    rm *_key.pub
+    rm -f *_key
+    rm -f *_key.pub
     popd
 fi
 

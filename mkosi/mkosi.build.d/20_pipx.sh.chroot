@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+set -eu
+
+# We need to tell pipx to use $DESTDIR as the target, else it just installs itself to the build image
+export PIPX_GLOBAL_HOME="$DESTDIR/usr/share/webthings/gateway/venv/"
+mkdir $PIPX_GLOBAL_HOME
+
+pipx --global install --global cookiecutter
+pipx --global runpip --global cookiecutter install -r "$SRCDIR/gateway/requirements.txt"

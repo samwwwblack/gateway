@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+# The version cannot be very long as it causes havoc with the partition labels.
+
+version=$(grep '"version":' ../package.json 2>/dev/null | cut -f 2 -d ':' | cut -f 2 -d '"')
+
+# Use the truncated current year (26, 27 etc) and day (000-365) for our base OS version
+current_day=$(date +%y%j)
+
+echo "$version.$current_day"

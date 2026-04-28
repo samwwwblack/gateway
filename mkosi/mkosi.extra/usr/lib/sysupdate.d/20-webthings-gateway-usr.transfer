@@ -1,0 +1,15 @@
+[Transfer]
+ProtectVersion=%A
+
+[Source]
+Type=url-file
+Path=https://lapwing.org/misc/webthings/gateway/
+MatchPattern=webthings-gateway_@v_%a.usr-%a.@u.raw.zst
+
+[Target]
+Type=partition
+Path=auto
+MatchPattern=webthings-gw_@v
+MatchPartitionType=usr
+PartitionFlags=0
+ReadOnly=1

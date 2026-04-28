@@ -1,0 +1,30 @@
+# From ParticleOS
+# Our own service to run systemctl preset --global.
+enable preset-global.service
+
+# Disable systemd-networkd as it tries to wait for links that never complete
+# TODO: Maybe use systemd-networkd instead of NetworkManager?
+disable systemd-networkd.service
+disable systemd-networkd.socket
+disable systemd-networkd-wait-online.service
+
+enable systemd-resolved.service
+
+enable NetworkManager.service
+enable NetworkManager-wait-online.service
+
+# Use the restricted chrony service just to reduce attack surface
+disable chrony.service
+enable chronyd-restricted.service
+
+# apt gets pulled in, but with /usr read-only doesn't make sense to run updates
+disable apt-daily.timer
+disable apt-daily-upgrade.timer
+disable apt-listchanges.timer
+
+# We use avahi for mDNS
+# TODO: Can we use systemd-resolved instead?
+enable avahi-daemon.service
+
+# Enable the gateway
+enable webthings-gateway.service

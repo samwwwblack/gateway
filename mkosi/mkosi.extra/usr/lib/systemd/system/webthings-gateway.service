@@ -1,0 +1,34 @@
+[Unit]
+Description=webthings WebThings Gateway
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+WorkingDirectory=/usr/share/webthings/gateway/
+EnvironmentFile=/usr/share/webthings/gateway/env
+EnvironmentFile=-/var/lib/webthings/gateway/env
+ExecStart=node build/app.js $START_TASK -- $START_ARGS
+Restart=on-failure
+
+# Restrict system access
+ProtectSystem=yes
+ProtectHome=yes
+PrivateTmp=yes
+
+# This will likely require tuning as/when read-only paths are set up
+ReadWritePaths=/var/lib/webthings/gateway/
+
+# Ideally we would restrict access to devices, but this is infeasable at the moment.
+
+# Deny access to the kernel
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+
+ProtectControlGroups=yes
+
+# TODO: There are a number of extra settings to restrict access further,
+# but don't set them for now.
+
+[Install]
+WantedBy=multi-user.target

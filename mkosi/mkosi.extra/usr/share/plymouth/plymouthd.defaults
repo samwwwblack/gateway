@@ -1,0 +1,5 @@
+# WebThings theme
+[Daemon]
+Theme=spinner
+ShowDelay=0
+DeviceTimeout=8

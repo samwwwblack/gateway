@@ -1,0 +1,4 @@
+# Environment settings for webthings gateway
+WEBTHINGS_HOME=/var/lib/webthings/gateway/
+START_TASK=run-only
+START_ARGS=

@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+# From ParticleOS; https://github.com/systemd/particleos
+# SPDX-License-Identifier: LGPL-2.1-or-later
+set -e
+
+# Capture the entirety of /etc in /usr/share/factory/etc so we can use
+# systemd-tmpfiles to symlink individual directories from it to /etc.
+mkdir -p "$BUILDROOT/usr/share/factory/"
+cp --archive --no-target-directory --update=none "$BUILDROOT/etc" "$BUILDROOT/usr/share/factory/etc"
+
+# Remove any generated SSH server keys/signatures/certificates,
+# we don't want to be shipping 'defaults' that could be accidentally copied across and used.
+if [[ -d "$BUILDROOT/usr/share/factory/etc/ssh" ]]; then
+    pushd "$BUILDROOT/usr/share/factory/etc/ssh"
+    rm *_key
+    rm *_key.pub
+    popd
+fi
+
+ln -sr "$BUILDROOT/usr" "$BUILDROOT/usr/share/factory/usr"

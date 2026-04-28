@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+set -eu
+
+# Create where we're installing the gateway directory to
+mkdir -p "$DESTDIR/usr/share/webthings/gateway/"

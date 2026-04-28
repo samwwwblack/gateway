@@ -1,0 +1,19 @@
+[Transfer]
+ProtectVersion=%A
+
+[Source]
+Type=url-file
+Path=https://lapwing.org/misc/webthings/gateway/
+MatchPattern=webthings-gateway_@v_%a.efi
+
+[Target]
+Type=regular-file
+Path=/EFI/Linux
+PathRelativeTo=boot
+MatchPattern=webthings-gateway_@v_%a+@l-@d.efi \
+  webthings-gateway_@v_%a+@l.efi \
+  webthings-gateway_@v_%a.efi
+Mode=0644
+TriesLeft=3
+TriesDone=0
+InstancesMax=2

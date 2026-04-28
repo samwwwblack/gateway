@@ -1,0 +1,41 @@
+#!/usr/bin/bash
+set -eu
+
+# TODO: This based on the Dockerfile, does this need to do this?
+# The snapcraft file has different build steps, so maybe we can base on that?
+
+# TODO: this is a naive copy into mkosi.builddir, we should check if there has been a version bump
+# Maybe copy into $ARTIFACTDIR with the version?
+if [[ ! -d "$BUILDDIR/gateway/" || ! -d "$BUILDDIR/gateway/build/" ]]; then
+        # If we use 'cp -a', we try to copy the mkosi/mkosi.builddir into mkosi/mkosi.builddir, and this just causes an obtuse error
+        rsync -a --exclude .git --exclude mkosi/ "$SRCDIR/gateway" "$BUILDDIR/"
+        cd "$BUILDDIR/gateway/"
+
+        CPPFLAGS="-DPNG_ARM_NEON_OPT=0" npm ci
+        npm run build
+
+        rm -rf ./node_modules/gifsicle
+        rm -rf ./node_modules/mozjpeg
+
+        npm prune --production
+fi
+
+# Copy over what we need
+cp -a "$BUILDDIR/gateway/node_modules/" "$DESTDIR/usr/share/webthings/gateway/"
+cp -a "$BUILDDIR/gateway/config/" "$DESTDIR/usr/share/webthings/gateway/"
+# Copy the built app into image
+# FIXME: There seems to be some hardcoded paths, eg if this is '/usr/share/webthings/gateway/app/'
+# then a view (tunnel-setup) expects '/usr/share/webthings/gateway/build/' instead.
+cp -a "$BUILDDIR/gateway/build/" "$DESTDIR/usr/share/webthings/gateway/build/"
+
+chown -R root:root "$DESTDIR/usr/share/webthings/gateway/"
+
+# Production config requires this?
+sed -i \
+        -e 's/ behindForwarding: true/ behindForwarding: false/' \
+        "$DESTDIR/usr/share/webthings/gateway/config/default.js"
+
+# The app seems to expect 'static' to be in the base dir, not in built app
+# FIXME: This shouldn't be the case?
+cd "$DESTDIR/usr/share/webthings/gateway/"
+ln -s ./build/static ./

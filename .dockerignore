@@ -20,3 +20,6 @@ static/uploads
 .post_upgrade_complete
 /browser-test-output
 #} [[./.gitignore]]
+
+# Ignore mkosi entirely
+mkosi/

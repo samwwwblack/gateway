@@ -20,3 +20,22 @@ npm-debug.log
 
 # Built packages
 *.snap
+
+# mkosi
+## Ignore mkosi build artifacts
+mkosi.builddir/
+mkosi.output/
+mkosi.cache/
+mkosi.tools/
+mkosi.tools.manifest
+
+## Do not commit signing keys or default passwords
+mkosi.key
+mkosi.crt
+mkosi.rootpw
+.mkosi-private
+
+## Ignore local config changes
+## as these may point to keys/certs/passwords out of tree
+mkosi.local/
+mkosi.local.conf

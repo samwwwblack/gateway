@@ -15,7 +15,7 @@ import LinuxDebianPlatform from './platforms/linux-debian';
 import LinuxRaspbianPlatform from './platforms/linux-raspbian';
 import LinuxUbuntuPlatform from './platforms/linux-ubuntu';
 import LinuxUbuntuCorePlatform from './platforms/linux-ubuntu-core';
-import LinuxWebThingsOSPlatform from '.platforms/linux-webthings';
+import LinuxWebThingsOSPlatform from './platforms/linux-webthings';
 import {
   LanMode,
   NetworkAddresses,

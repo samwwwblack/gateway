@@ -13,6 +13,8 @@
 Due to a bug in npm < 10 (https://github.com/npm/cli/issues/5998), `mkosi` needs to be run as root.
 
 - Be in the git checkout (gateway)
+- `mkosi -C mkosi/ genkey`
+  - This only needs to be run once
 - Become root (`sudo su -` or `su -`)
 - `mkosi -C mkosi/ build`
   - If there are build artifacts from previous runs, append `--force`

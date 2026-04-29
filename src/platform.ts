@@ -93,16 +93,20 @@ export function getOS(): string {
         switch (id) {
           case 'ubuntu':
             os_release_id = 'linux-ubuntu';
+            break;
           case 'ubuntu-core':
             os_release_id = 'linux-ubuntu-core';
+            break;
           case 'debian':
             os_release_id = 'linux-debian';
+            break;
           case 'arch':
             os_release_id = 'linux-arch';
+            break;
           case 'raspbian':
             os_release_id = 'linux-raspbian';
+            break;
           default:
-            console.log('Unknown Linux distribution');
             break;
         }
       }

@@ -1,0 +1,33 @@
+= Using mkosi
+
+== Requirements
+
+- mkosi v26
+- ~30GB free space
+
+
+== Usage
+
+=== Building
+
+Due to a bug in npm < 10 (https://github.com/npm/cli/issues/5998), `mkosi` needs to be run as root.
+
+- Be in the git checkout (gateway)
+- Become root (`sudo su -` or `su -`)
+- `mkosi -C mkosi/ build`
+  - If there are build artifacts from previous runs, append `--force`
+  - To include packages and set up for testing in a VM, append `--profile vm`
+
+
+=== Running
+
+==== Create a QCOW2 image
+
+`mkosi` creates a minimally sized image for installation on target devices, so for a VM we need to expand the image size so that `systemd-repart` can run and do it's work.
+
+For this example the image is `webthings-gateway_2.0.0.26047_x86-64`;
+
+- `qemu-img convert -f raw -O qcow2 ./mkosi/mkosi.output/webthings-gateway_2.0.0.26047_x86-64.raw ./mkosi/mkosi.output/webthings-gateway_2.0.0.26047_x86-64.qcow2 -p`
+- `qemu-img resize ./mkosi/mkosi.output/webthings-gateway_2.0.0.26047_x86-64.qcow2 +10G`
+
+This QCOW2 image can then be used by Virtual Machine Manager/libvirt.

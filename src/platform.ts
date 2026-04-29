@@ -69,7 +69,7 @@ export function getOS(): string {
       // else look at ID
       if (line.startsWith('IMAGE_ID=')) {
         // Get the value of the IMAGE_ID
-        let id = line.substring(8, line.length);
+        let id = line.substring(9, line.length);
         // Remove any quotation marks
         id = id.replace(/"/g, '');
         switch (id) {

@@ -26,5 +26,8 @@ disable apt-listchanges.timer
 # TODO: Can we use systemd-resolved instead?
 enable avahi-daemon.service
 
+# Don't enable dnsmasq as this is only used once during setup
+disable dnsmasq.service
+
 # Enable the gateway
 enable webthings-gateway.service

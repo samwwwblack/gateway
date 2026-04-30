@@ -630,6 +630,31 @@ export class LinuxWebThingsOSPlatform extends BasePlatform {
         // This will probably not fire, but just in case.
         return proc.status === 0;
     }
+
+    /**
+     * Determine whether or not the gateway can auto-update itself.
+     *
+     * @returns {Object} {available: <bool>, enabled: <bool>}
+     */
+    getSelfUpdateStatus(): SelfUpdateStatus {
+        const proc = child_process.spawnSync('systemctl', ['is-active', 'systemd-sysupdate.timer']);
+        return proc.status === 0;
+    }
+
+    /**
+     * Enable/disable auto-updates.
+     *
+     * @param {boolean} enabled - Whether or not to enable auto-updates.
+     * @returns {boolean} Boolean indicating success of the command.
+     */
+    setSelfUpdateStatus(_enabled: boolean): boolean {
+        let proc = child_process.spawnSync('systemctl', [
+            enabled ? 'enable' : 'disable',
+            '--now',
+            'systemd-sysupdate.timer',
+        ]);
+        return proc.status === 0;
+    }
 }
 
 export default new LinuxWebThingsOSPlatform();

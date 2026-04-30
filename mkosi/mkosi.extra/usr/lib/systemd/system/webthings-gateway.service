@@ -18,7 +18,13 @@ PrivateTmp=yes
 # This will likely require tuning as/when read-only paths are set up
 ReadWritePaths=/var/lib/webthings/gateway/
 
-# Ideally we would restrict access to devices, but this is infeasable at the moment.
+# Restrict access to serial TTY devices
+DeviceAllow=char-ttyUSB
+DeviceAllow=char-ttyS
+
+# Allow USB devices that include Bluetooth devices
+## TODO: Does this add extra security exposure to random USB devices we don't need access to?
+DeviceAllow=char-usb_device
 
 # Deny access to the kernel
 ProtectKernelTunables=yes

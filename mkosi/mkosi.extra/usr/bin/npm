@@ -3,7 +3,7 @@ set -eu
 
 # This is solely to allow 'npm link <package>' to work for addons, nothing else.
 
-if [[ "${1}" == "link" && -n "${2}" ]]; then
+if [[ "${#}" -eq 2 && "${1}" == "link" ]]; then
     # We install 'webthings-gateway' and required node_modules in '/usr/share/webthings/gateway/node_modules',
     # so link from there to '<current directory>/node_modules'.
     # This does not do the inverse that 'npm link' can do.

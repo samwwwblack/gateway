@@ -13,7 +13,7 @@ import fs from 'fs';
 import child_process from 'child_process';
 import { execFileSync } from 'child_process';
 import NetworkManager, { ConnectionSettings } from './utilities/network-manager';
-import { LanMode, NetworkAddresses, WirelessNetwork } from './types';
+import { LanMode, NetworkAddresses, SelfUpdateStatus, WirelessNetwork } from './types';
 
 export class LinuxWebThingsOSPlatform extends BasePlatform {
     /**
@@ -652,8 +652,15 @@ export class LinuxWebThingsOSPlatform extends BasePlatform {
      * @returns {Object} {available: <bool>, enabled: <bool>}
      */
     getSelfUpdateStatus(): SelfUpdateStatus {
-        const proc = child_process.spawnSync('systemctl', ['is-active', 'systemd-sysupdate.timer']);
-        return proc.status === 0;
+        const timer = 'systemd-sysupdate.timer';
+        const proc = child_process.spawnSync('systemctl', ['is-active', timer]);
+
+        return {
+            available: true,
+            enabled: proc.status === 0,
+            configurable: true,
+            triggerable: true,
+        };
     }
 
     /**
@@ -662,7 +669,7 @@ export class LinuxWebThingsOSPlatform extends BasePlatform {
      * @param {boolean} enabled - Whether or not to enable auto-updates.
      * @returns {boolean} Boolean indicating success of the command.
      */
-    setSelfUpdateStatus(_enabled: boolean): boolean {
+    setSelfUpdateStatus(enabled: boolean): boolean {
         let proc = child_process.spawnSync('systemctl', [
             enabled ? 'enable' : 'disable',
             '--now',

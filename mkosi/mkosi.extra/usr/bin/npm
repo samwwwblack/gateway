@@ -1,0 +1,27 @@
+#!/usr/bin/bash
+set -eu
+
+# This is solely to allow 'npm link <package>' to work for addons, nothing else.
+
+if [[ "${1}" == "link" && -n "${2}" ]]; then
+    # We install 'webthings-gateway' and required node_modules in '/usr/share/webthings/gateway/node_modules',
+    # so link from there to '<current directory>/node_modules'.
+    # This does not do the inverse that 'npm link' can do.
+    NODE_MODULE_PATH="/usr/share/webthings/gateway/node_modules/${2}/"
+    if [[ ! -d "${NODE_MODULE_PATH}" ]]; then
+        echo "Cannot find \"${NODE_MODULE_PATH}\""
+        exit 1
+    fi
+
+    CWD_NODE_MODULES="$(pwd)/node_modules/"
+    if [[ ! -d "${CWD_NODE_MODULES}" ]]; then
+        echo "Cannot find node_modules in current directory"
+        exit 2
+    fi
+
+    ln -s "${NODE_MODULE_PATH}" "${CWD_NODE_MODULES}"
+
+else
+    echo "This is not 'npm', merely a shim to ensure 'npm link' works."
+    exit 255
+fi

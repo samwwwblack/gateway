@@ -24,6 +24,21 @@ export class LinuxWebThingsOSPlatform extends BasePlatform {
     }
 
     /**
+     * Get the MAC address of a network device.
+     *
+     * @param {string} device - The network device, e.g. wlan0
+     * @returns {string|null} MAC address, or null on error
+     */
+    getMacAddress(device: string): string | null {
+        const addrFile = `/sys/class/net/${device}/address`;
+        if (!fs.existsSync(addrFile)) {
+            return null;
+        }
+
+        return fs.readFileSync(addrFile, 'utf8').trim();
+    }
+
+    /**
      * Get the current addresses for Wi-Fi and LAN.
      *
      * @returns {Promise<NetworkAddresses>} Promise that resolves with

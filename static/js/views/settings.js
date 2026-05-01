@@ -853,6 +853,7 @@ const SettingsScreen = {
           case 'linux-raspbian':
           case 'linux-ubuntu':
           case 'linux-ubuntu-core':
+          case 'linux-webthings':
             this.elements.network.client.main.classList.remove('hidden');
             break;
           default:
